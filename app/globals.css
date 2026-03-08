@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../";
 
 @theme {
   --color-cream: #faf8f4;
