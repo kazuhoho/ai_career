@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: UX / Marketing discussion
+    url: https://github.com/OWNER/REPO/discussions
+    about: UXやマーケティング改善の議論はDiscussionも利用してください
