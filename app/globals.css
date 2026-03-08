@@ -13,17 +13,19 @@
   --font-body: "Zen Kaku Gothic New", sans-serif;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  ::selection {
+    background: var(--color-ac);
+    color: #fff;
+  }
 
-::selection {
-  background: var(--color-ac);
-  color: #fff;
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ch);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.7;
+    background: var(--color-cream);
+  }
 }
 
 @keyframes loadbar {
@@ -33,12 +35,4 @@
   100% {
     transform: translateX(400%);
   }
-}
-
-body {
-  font-family: var(--font-body);
-  color: var(--color-ch);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.7;
-  background: var(--color-cream);
 }
