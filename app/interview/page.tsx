@@ -27,6 +27,7 @@ export default function InterviewPage() {
   const [done, setDone] = useState(false);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Guard
@@ -37,13 +38,17 @@ export default function InterviewPage() {
     }
   }, [isLoaded, state.typeResult, router]);
 
-  // Track page view
+  // Track mock_interview_start on mount
   useEffect(() => {
-    analytics.track("page_view", {
+    if (!state.typeResult) return;
+    analytics.track("mock_interview_start", {
       path: "/interview",
+      result_type: state.typeResult.primaryType,
+      timer_mode: "60s",
       funnel_version: "v1",
+      copy_variant: "default",
     });
-  }, [analytics]);
+  }, [analytics, state.typeResult]);
 
   // Countdown timer
   useEffect(() => {
@@ -71,12 +76,15 @@ export default function InterviewPage() {
   const handleSubmit = useCallback(async () => {
     if (text.length < 5 || submitting) return;
     setSubmitting(true);
+    setError(null);
 
     analytics.track("mock_interview_submit", {
       funnel_version: "v1",
       timer_mode: "60s",
+      result_type: state.typeResult?.primaryType,
       len: text.length,
       timeLeft,
+      copy_variant: "default",
     });
 
     try {
@@ -89,6 +97,7 @@ export default function InterviewPage() {
       router.push("/feedback");
     } catch {
       setSubmitting(false);
+      setError("AI分析に失敗しました。もう一度お試しください。");
     }
   }, [text, submitting, analytics, timeLeft, state.typeResult, setFeedback, router]);
 
@@ -209,6 +218,13 @@ export default function InterviewPage() {
             </span>
           </div>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-4 mb-6">
+            {error}
+          </div>
+        )}
 
         {/* Submit */}
         <div className="text-center">

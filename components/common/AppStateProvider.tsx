@@ -35,10 +35,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load from sessionStorage on mount
+  // If data is corrupted (loadState returns null but storage has data), clear it
   useEffect(() => {
     const saved = loadState();
     if (saved) {
       setState(saved);
+    } else {
+      clearState();
     }
     setIsLoaded(true);
   }, []);

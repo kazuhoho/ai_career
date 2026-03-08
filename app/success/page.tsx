@@ -10,11 +10,16 @@ import { getProductBySlug } from "@/data/products";
 import { validateSessionId, validateProductSlug } from "@/lib/validation";
 import { getAnalyticsService } from "@/services/registry";
 
+// v1: メール通知は未実装
+// 将来実装時: Webhook で order 確定後、EmailService.sendPurchaseConfirmation(email, slug) を呼ぶ
+// success ページでは「メールでご案内をお送りします」のテキストのみ表示
+
 type Status = "pending" | "paid" | "fulfilled";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>("pending");
+  const analytics = getAnalyticsService();
 
   const sessionId = validateSessionId(searchParams.get("session_id"));
   const slug = validateProductSlug(searchParams.get("product"));
@@ -22,26 +27,41 @@ function SuccessContent() {
 
   const isMock = process.env.NEXT_PUBLIC_SERVICE_MODE !== "production";
 
+  // Track purchase_pending on mount
+  useEffect(() => {
+    if (!slug) return;
+    analytics.track("purchase_pending", {
+      product: slug,
+      funnel_version: "v1",
+      copy_variant: "default",
+    });
+  }, [analytics, slug]);
+
   useEffect(() => {
     if (isMock) {
+      // Mock mode: simulate payment confirmation after 2s
       const timer = setTimeout(() => {
         setStatus("paid");
         setTimeout(() => setStatus("fulfilled"), 500);
       }, 2000);
       return () => clearTimeout(timer);
     }
-    // Production: would poll payment status via API
-    setStatus("fulfilled");
+    // Production: remain in pending state until Webhook confirms payment.
+    // Future: poll GET /api/orders/:sessionId for status updates,
+    // triggered by Stripe webhook → order status update in DB.
+    // Do NOT set fulfilled here without server-side confirmation.
   }, [isMock]);
 
+  // Track purchase_confirmed when fulfilled
   useEffect(() => {
     if (status === "fulfilled" && slug) {
-      getAnalyticsService().track("purchase_complete", {
+      analytics.track("purchase_confirmed", {
         product: slug,
         funnel_version: "v1",
+        copy_variant: "default",
       });
     }
-  }, [status, slug]);
+  }, [status, slug, analytics]);
 
   return (
     <div className="min-h-screen bg-cream text-ch flex flex-col">
@@ -57,7 +77,12 @@ function SuccessContent() {
               <h1 className="font-display text-2xl md:text-3xl font-bold mb-4">
                 お支払いを確認中です...
               </h1>
-              <p className="text-sm text-mu">しばらくお待ちください</p>
+              <p className="text-sm text-mu mb-2">しばらくお待ちください</p>
+              {sessionId && (
+                <p className="text-xs text-lm">
+                  注文番号: {sessionId.slice(0, 16)}...
+                </p>
+              )}
             </>
           )}
 

@@ -12,7 +12,12 @@ export interface AIService {
   evaluateAnswer(answer: string, type: DiagnosticType): Promise<FeedbackResult>;
 }
 
-/** Payment/checkout service */
+/**
+ * Payment/checkout service.
+ * v1: email は Stripe Checkout のフォームから取得される。
+ * Webhook で order 作成時に email を保存し、
+ * 購入確認メールは EmailService.sendPurchaseConfirmation で送信する。
+ */
 export interface PaymentService {
   createCheckout(productSlug: string): Promise<{ sessionId: string; url: string }>;
 }

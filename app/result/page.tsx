@@ -39,13 +39,10 @@ export default function ResultPage() {
   // Track analytics on mount
   useEffect(() => {
     if (!state.typeResult) return;
-    analytics.track("diagnostic_complete", {
-      result_type: state.typeResult.primaryType,
-      funnel_version: "v1",
-    });
     analytics.track("free_result_view", {
       result_type: state.typeResult.primaryType,
       funnel_version: "v1",
+      copy_variant: "default",
     });
   }, [analytics, state.typeResult]);
 

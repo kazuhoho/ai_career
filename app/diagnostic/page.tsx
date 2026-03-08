@@ -22,7 +22,10 @@ export default function DiagnosticPage() {
   const analytics = getAnalyticsService();
 
   useEffect(() => {
-    analytics.track("diagnostic_start", { funnel_version: "v1" });
+    analytics.track("diagnostic_start", {
+      funnel_version: "v1",
+      copy_variant: "default",
+    });
   }, [analytics]);
 
   const question = QUESTIONS[current];

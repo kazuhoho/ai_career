@@ -26,9 +26,11 @@ export default function OfferPage() {
   // Track on mount
   useEffect(() => {
     if (!state.typeResult) return;
-    analytics.track("page_view", {
+    analytics.track("offer_view", {
       path: "/offer",
+      result_type: state.typeResult.primaryType,
       funnel_version: "v1",
+      copy_variant: "default",
     });
   }, [analytics, state.typeResult]);
 
@@ -51,7 +53,9 @@ export default function OfferPage() {
   const handleCta = (slug: string) => {
     analytics.track("checkout_start", {
       product: slug,
+      result_type: state.typeResult?.primaryType,
       funnel_version: "v1",
+      copy_variant: "default",
     });
     router.push(`/checkout?product=${slug}`);
   };

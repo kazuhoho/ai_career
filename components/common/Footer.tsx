@@ -17,7 +17,7 @@ export default function Footer() {
           お問い合わせ
         </Link>
       </div>
-      <div>&copy; 2025 CareerLab</div>
+      <div>&copy; 2026 CareerLab</div>
     </footer>
   );
 }

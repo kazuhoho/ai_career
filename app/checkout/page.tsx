@@ -27,6 +27,7 @@ function CheckoutContent() {
     getAnalyticsService().track("checkout_start", {
       product: slug,
       funnel_version: "v1",
+      copy_variant: "default",
     });
   }, [slug, router]);
 
@@ -105,6 +106,14 @@ function CheckoutContent() {
               戻る
             </Button>
           </div>
+
+          <p className="text-xs text-lm mt-6 text-center leading-relaxed">
+            購入をキャンセルする場合は「戻る」を押してプラン一覧に戻れます。
+            <br />
+            決済完了後のキャンセルは
+            <a href="/contact" className="underline hover:text-ch transition-colors">お問い合わせ</a>
+            よりご連絡ください。
+          </p>
         </section>
       </main>
 

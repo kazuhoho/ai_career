@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Nav from '@/components/common/Nav';
 import Button from '@/components/common/Button';
 import Footer from '@/components/common/Footer';
+import { getAnalyticsService } from '@/services/registry';
 
 type FormStatus = 'idle' | 'sending' | 'sent' | 'error';
 
@@ -25,6 +26,10 @@ export default function ContactPage() {
       // v1: simulate sending (replace with actual API)
       await new Promise((r) => setTimeout(r, 1000));
       console.log('[Contact] Form submitted:', { name, email, message });
+      getAnalyticsService().track('contact_submit', {
+        funnel_version: 'v1',
+        copy_variant: 'default',
+      });
       setStatus('sent');
     } catch {
       setStatus('error');

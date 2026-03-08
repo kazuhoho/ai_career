@@ -28,12 +28,19 @@ export default function LPPage() {
   const analytics = getAnalyticsService();
 
   useEffect(() => {
-    analytics.track("page_view", { path: "/", funnel_version: "v1" });
+    analytics.track("page_view", {
+      path: "/",
+      funnel_version: "v1",
+      copy_variant: "default",
+    });
     setVisible(true);
   }, [analytics]);
 
   const handleCTA = () => {
-    analytics.track("lp_cta_click", { funnel_version: "v1" });
+    analytics.track("lp_cta_click", {
+      funnel_version: "v1",
+      copy_variant: "default",
+    });
     router.push("/diagnostic");
   };
 

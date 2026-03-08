@@ -34,7 +34,10 @@ export default function FeedbackPage() {
     if (!state.feedback) return;
     analytics.track("mock_interview_feedback_view", {
       score: state.feedback.overallScore,
+      result_type: state.typeResult?.primaryType,
+      timer_mode: "60s",
       funnel_version: "v1",
+      copy_variant: "default",
     });
   }, [analytics, state.feedback]);
 
@@ -50,7 +53,11 @@ export default function FeedbackPage() {
   const color = scoreColor(feedback.overallScore);
 
   const handleOfferClick = () => {
-    analytics.track("paid_cta_click", { funnel_version: "v1" });
+    analytics.track("paid_cta_click", {
+      result_type: state.typeResult?.primaryType,
+      funnel_version: "v1",
+      copy_variant: "default",
+    });
     router.push("/offer");
   };
 

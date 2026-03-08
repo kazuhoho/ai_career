@@ -14,9 +14,12 @@ export type AnalyticsEvent =
   | 'mock_interview_start'
   | 'mock_interview_submit'
   | 'mock_interview_feedback_view'
+  | 'offer_view'
   | 'paid_cta_click'
   | 'checkout_start'
-  | 'purchase_complete';
+  | 'purchase_pending'
+  | 'purchase_confirmed'
+  | 'contact_submit';
 
 /** Parameters attached to analytics events */
 export interface AnalyticsParams {
